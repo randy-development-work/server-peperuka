@@ -27,12 +27,16 @@ end
 
 group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
-  # gem "spring"
+  gem "spring"
 end
-
-gem 'active_model_serializers'
 
 # group :production do
 #   gem 'pg', '~> 1.4', '>= 1.4.6' #postgresql
 
 # end
+
+gem "jwt", "~> 2.7"
+
+gem "active_model_serializers", "~> 0.10.13"
+
+gem "faker", "~> 3.1"
