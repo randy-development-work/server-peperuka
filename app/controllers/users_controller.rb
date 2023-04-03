@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  skip_before_action :authorize, only:[:create]
+  skip_before_action :authorized, only:[:create]
 
   # GET /users
   # def index
@@ -9,18 +9,26 @@ class UsersController < ApplicationController
   # end
 
   # GET /me
+  # def show
+  #   user = User.find_by(id: session[:user_id])
+  #   render json: user, status: :created
+  # end
+
+  # auto-login /GET /me
   def show
-    user = User.find_by(id: session[:user_id])
-    render json: user, status: :created
+    render json: { user: UserSerializer.new(current_user) }, status: :accepted
   end
 
   # POST /signup
-  def create
-    user = User.create!(user_params)
-    session[:user_id] = user.id
-    render json: user, status: :created
-    
+ # POST /api/v1/users (sign up)
+ def create
+  @user = User.create(user_params)
+  if @user.valid?
+    render json: { user: UserSerializer.new(@user) }, status: :created
+  else
+    render json: { error: 'failed to create user' }, status: :unprocessable_entity
   end
+end
 
   # PATCH/PUT /users/1
   # def update
@@ -44,6 +52,6 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.permit(:username, :password, :password_confirmation)
+      params.require(:user).permit(:username, :password, :password_confirmation)
     end
 end
