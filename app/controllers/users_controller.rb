@@ -19,8 +19,7 @@ class UsersController < ApplicationController
     render json: { user: UserSerializer.new(current_user) }, status: :accepted
   end
 
-  # POST /signup
- # POST /api/v1/users (sign up)
+ # POST /sign up
  def create
   @user = User.create(user_params)
   if @user.valid?
